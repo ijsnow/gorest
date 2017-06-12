@@ -1,7 +1,6 @@
 package gorest
 
 import (
-	"fmt"
 	"net/http"
 )
 
@@ -22,9 +21,8 @@ type Handler struct {
 func (h Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	handle := h.Handle
 
-	for idx := len(h.Middlewares); idx > 0; idx-- {
-		fmt.Println(len(h.Middlewares), idx-1, h.Middlewares)
-		handle = h.Middlewares[idx-1](handle)
+	for _, mdw := range h.Middlewares {
+		handle = mdw(handle)
 	}
 
 	code, data := handle(w, r)
